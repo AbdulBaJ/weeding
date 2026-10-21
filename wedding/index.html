@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>دعوة زفاف | نداء ومحمد</title>
+    
+    <!-- Elegant Arabic Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Great+Vibes&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4A4238', // Dark brownish grey
+                        accent: '#8b7355',  // Requested custom gold/brown
+                        light: '#F4F1EC',   // Envelope beige
+                        bgBase: '#f5f2eb',  // New App background
+                    },
+                    fontFamily: {
+                        serif: ['"Amiri"', 'serif'],
+                        sans: ['"Tajawal"', 'sans-serif'],
+                        'great-vibes': ['"Great Vibes"', 'cursive']
+                    },
+                    boxShadow: {
+                        'emboss': 'inset 0 1px 3px rgba(255,255,255,0.7), 0 4px 6px rgba(0,0,0,0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Body setup to frame the mobile view on desktop */
+        body {
+            background-color: #2a2826;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; 
+        }
+
+        /* The iPhone aspect container */
+        #app-container {
+            width: 100%;
+            height: 100dvh;
+            max-width: 430px; /* iPhone Pro Max width */
+            background-color: #f5f2eb;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+            overflow-x: hidden;
+            /* New cream paper texture background */
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            background-repeat: repeat;
+        }
+
+        @media (min-width: 600px) {
+            #app-container {
+                height: 90vh; /* Shorter on desktop to show framing */
+                max-height: 932px;
+                border-radius: 40px;
+                border: 8px solid #1a1a1a;
+            }
+        }
+
+        /* Hide scrollbar for aesthetics */
+        #app-container::-webkit-scrollbar { width: 0; display: none; }
+        
+        /* Envelope Animations */
+        .flap-open {
+            transform: rotateX(180deg);
+            z-index: 10;
+        }
+        
+        #envelope-screen {
+            transition: opacity 0.8s ease-in-out, visibility 0.8s;
+        }
+
+        #details-screen {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-out;
+        }
+
+        .show-details {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) !important;
+        }
+    </style>
+</head>
+<body class="text-primary font-sans antialiased">
+
+    <!-- Mobile App Frame -->
+    <div id="app-container">
+
+        <!-- ================= PAGE 1: ENVELOPE SCREEN ================= -->
+        <div id="envelope-screen" class="absolute inset-0 flex flex-col justify-center items-center p-6 z-50 bg-transparent">
+            
+            <!-- Top Monogram / Logo -->
+            <div class="mb-8 flex flex-col items-center">
+                <img src="image_8281bd.png" alt="شعار نداء ومحمد" class="w-20 h-auto object-contain mb-3 mix-blend-multiply opacity-85 drop-shadow-sm" style="filter: sepia(0.4) hue-rotate(-20deg);">
+                <h1 class="font-serif text-2xl tracking-widest text-primary mb-2">نداء | محمد</h1>
+                <p class="font-sans text-sm tracking-wider text-accent font-light">06.11.2026</p>
+            </div>
+
+            <!-- Interactive Envelope -->
+            <div class="relative w-72 h-48 my-8 cursor-pointer group" id="envelope" onclick="openEnvelope()">
+                <!-- Back of Envelope -->
+                <div class="absolute inset-0 bg-[#e3ded5] rounded-md shadow-sm"></div>
+                
+                <!-- Internal Letter Hint -->
+                <div class="absolute left-3 right-3 bottom-2 top-4 bg-white rounded-sm shadow-inner flex justify-center pt-6">
+                    <span class="font-serif text-accent text-xs">دعوة زفاف</span>
+                </div>
+
+                <!-- Bottom / Side Flaps (Front) -->
+                <div class="absolute inset-0 z-20 pointer-events-none drop-shadow-md">
+                    <svg viewBox="0 0 100 70" preserveAspectRatio="none" class="w-full h-full">
+                        <path d="M0 0 L50 40 L100 0 L100 70 L0 70 Z" fill="#F4F1EC" stroke="#E0DCD3" stroke-width="0.5"/>
+                    </svg>
+                </div>
+
+                <!-- Top Flap (Animated) -->
+                <div id="envelope-flap" class="absolute top-0 left-0 w-full h-[65%] z-30 origin-top transition-transform duration-700 ease-in-out drop-shadow-lg" style="transform-style: preserve-3d;">
+                    <svg viewBox="0 0 100 50" preserveAspectRatio="none" class="w-full h-full">
+                        <path d="M0 0 L50 45 L100 0 Z" fill="#F4F1EC" stroke="#E0DCD3" stroke-width="0.5"/>
+                        <!-- Embossed ornate detail on flap -->
+                        <path d="M30 15 Q50 35 70 15 Q50 25 30 15 Z" fill="none" stroke="#EAE6DF" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Instruction Text -->
+            <p class="mt-12 text-sm text-primary/70 font-sans tracking-wide animate-pulse">
+                انقر على الظرف لفتح الدعوه
+            </p>
+        </div>
+
+
+        <!-- ================= PAGE 2: INVITATION DETAILS ================= -->
+        <div id="details-screen" class="absolute inset-x-0 top-0 min-h-full py-16 px-6 z-40 bg-transparent hidden">
+            
+            <!-- Header Section -->
+            <div class="text-center mb-12">
+                <!-- 1. Top Logo -->
+                <img src="image_8281bd.png" alt="شعار" class="h-20 w-auto object-contain mx-auto mb-8 mix-blend-multiply opacity-80" style="filter: sepia(0.3);">
+                
+                <!-- 2. Welcome Message Section -->
+                <div class="mb-10 animate-fade-in" style="animation-delay: 0.5s">
+                    <h2 class="font-great-vibes text-4xl text-accent mb-3" dir="ltr">My wedding</h2>
+                    <p class="text-gray-500 text-[9px] uppercase tracking-[0.25em] leading-relaxed mb-5 max-w-[320px] mx-auto font-sans" dir="ltr">
+                        TO EVERYONE WHO HOLDS A SPECIAL PLACE IN MY HEART<br>I WARMLY INVITE YOU TO MY WEDDING CEREMONY
+                    </p>
+                    <div class="h-px w-24 bg-gradient-to-r from-transparent via-accent/40 to-transparent mx-auto mb-5"></div>
+                    <p class="text-accent font-serif text-lg leading-loose max-w-[300px] mx-auto">
+                        الى كل من نال في قلبي مكان عزيز ،<br>بكل ود وحب أدعوكم لحضور حفل زفاف
+                    </p>
+                </div>
+
+                <!-- 3. THE NAMES Section -->
+                <h2 class="font-serif text-6xl text-accent mb-8 mt-2 leading-tight">
+                    نداء<br>
+                    <span class="text-4xl text-primary/60 font-sans font-light">&</span><br>
+                    محمد
+                </h2>
+                
+                <!-- 4. Date -->
+                <div class="flex items-center justify-center gap-4 my-10 opacity-80">
+                    <div class="h-px w-12 bg-accent/60"></div>
+                    <p class="font-serif text-xl tracking-widest text-primary">الجمعة 6 نوفمبر 2026</p>
+                    <div class="h-px w-12 bg-accent/60"></div>
+                </div>
+            </div>
+
+            <!-- 5. Location Section -->
+            <div class="bg-white/40 backdrop-blur-sm rounded-2xl p-6 text-center shadow-emboss border border-white/40 mb-10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto text-accent mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <h3 class="font-sans text-xl font-bold text-primary mb-2">قاعة نوف 2</h3>
+                <p class="text-sm text-primary/70 mb-5">بحضوركم تكمل فرحتنا </p>
+                
+                <!-- Map Link -->
+                <a href="https://maps.app.goo.gl/jjLohEZ7BTD2tL8s5" target="_blank" class="inline-flex items-center gap-2 bg-accent text-white px-6 py-2.5 rounded-full text-sm font-medium transition hover:bg-opacity-90 shadow-md">
+                    موقع القاعة
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- 6. Countdown Timer -->
+            <div class="mb-12">
+                <div id="countdown" class="grid grid-cols-4 gap-2 text-center" dir="ltr">
+                    <div class="bg-white/40 backdrop-blur-sm rounded-lg p-3 border border-white/30 shadow-sm flex flex-col items-center justify-center">
+                        <span id="days" class="text-2xl font-serif text-primary font-bold">00</span>
+                        <span class="text-[10px] text-accent mt-1 font-sans">يوم</span>
+                    </div>
+                    <div class="bg-white/40 backdrop-blur-sm rounded-lg p-3 border border-white/30 shadow-sm flex flex-col items-center justify-center">
+                        <span id="hours" class="text-2xl font-serif text-primary font-bold">00</span>
+                        <span class="text-[10px] text-accent mt-1 font-sans">ساعة</span>
+                    </div>
+                    <div class="bg-white/40 backdrop-blur-sm rounded-lg p-3 border border-white/30 shadow-sm flex flex-col items-center justify-center">
+                        <span id="minutes" class="text-2xl font-serif text-primary font-bold">00</span>
+                        <span class="text-[10px] text-accent mt-1 font-sans">دقيقة</span>
+                    </div>
+                    <div class="bg-white/40 backdrop-blur-sm rounded-lg p-3 border border-white/30 shadow-sm flex flex-col items-center justify-center">
+                        <span id="seconds" class="text-2xl font-serif text-primary font-bold">00</span>
+                        <span class="text-[10px] text-accent mt-1 font-sans">ثانية</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 7. Footer Logo -->
+            <footer class="text-center pb-8 pt-4 flex justify-center border-t border-primary/10">
+                <img src="image_8281bd.png" alt="شعار نداء ومحمد" class="h-20 w-auto object-contain mix-blend-multiply opacity-60" style="filter: sepia(0.4) hue-rotate(-20deg);">
+            </footer>
+
+        </div>
+    </div>
+
+    <!-- Logic Script -->
+    <script>
+        // --- Envelope Interaction ---
+        function openEnvelope() {
+            const flap = document.getElementById('envelope-flap');
+            const screen1 = document.getElementById('envelope-screen');
+            const screen2 = document.getElementById('details-screen');
+            
+            // Open flap
+            flap.classList.add('flap-open');
+            
+            // Wait for flap animation to finish, then transition screens
+            setTimeout(() => {
+                screen1.style.opacity = '0';
+                
+                setTimeout(() => {
+                    screen1.style.display = 'none';
+                    screen2.classList.remove('hidden');
+                    
+                    // Force a reflow before adding the visible class for smooth transition
+                    void screen2.offsetWidth; 
+                    
+                    screen2.classList.add('show-details');
+                    
+                    // Scroll back to top just in case
+                    document.getElementById('app-container').scrollTop = 0;
+                }, 400); // Wait for screen1 to fade out
+                
+            }, 700); // Flap opening duration
+        }
+
+        // --- Countdown Timer ---
+        const targetDate = new Date("November 6, 2026 20:00:00").getTime();
+
+        const timer = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                clearInterval(timer);
+                document.getElementById("countdown").innerHTML = 
+                    "<div class='col-span-4 text-center font-serif text-accent text-xl'>اليوم هو يومنا السعيد!</div>";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+        }, 1000);
+    </script>
+</body>
+</html>
